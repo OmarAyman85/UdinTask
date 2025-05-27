@@ -5,7 +5,7 @@ Features include user authentication, role-based registration, live leaderboard,
 
 ---
 
-# Demo
+# Video Demo
 
 https://drive.google.com/file/d/1p21vOUCH62KWsD_pPhFD3nTB77Fj91iM/view?usp=drive_link
 
