@@ -1,6 +1,6 @@
 # Prompt.md
 
-This document captures some of the prompts exchanged during the development of the Sokoban game project using Angular. Although it significantly eased the development process, it fell short in facilitating the smooth creation of a solvable algorithm."
+This document captures some of the prompts exchanged during the development of the Sokoban game project using Angular. Although it significantly eased the development process, it fell short in facilitating the smooth creation of a solvable algorithm.
 
 ---
 
