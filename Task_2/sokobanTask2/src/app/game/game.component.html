@@ -1,0 +1,15 @@
+<div class="container">
+  <div class="controls">
+    <button (click)="resetLevel()">🔄 Reset Puzzle</button>
+  </div>
+
+  <h2 *ngIf="winMessage">{{ winMessage }}</h2>
+
+  <div class="grid">
+    <div *ngFor="let row of baseGrid; let y = index" class="row">
+      <span *ngFor="let col of row; let x = index" class="cell">
+        {{ getTileDisplay(x, y) }}
+      </span>
+    </div>
+  </div>
+</div>

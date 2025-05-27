@@ -1,0 +1,42 @@
+<div class="container">
+  <h2>Register</h2>
+
+  <form class="form-column" (submit)="onRegister()">
+    <input
+      [(ngModel)]="email"
+      name="email"
+      placeholder="Email"
+      type="email"
+      required
+    />
+    <input
+      [(ngModel)]="username"
+      name="username"
+      placeholder="username"
+      type="text"
+    />
+    <input
+      [(ngModel)]="password"
+      name="password"
+      placeholder="Password"
+      type="password"
+      required
+    />
+    <select [(ngModel)]="role" name="role">
+      <option value="player">Player</option>
+      <option value="admin">Admin</option>
+      <option value="anonymous">Anonymous</option>
+    </select>
+    <button type="submit">Register</button>
+  </form>
+
+  <!-- Sign In Link -->
+  <div class="sign-in-link">
+    <p>
+      Already have an account?
+      <a routerLink="/login">Sign in</a>
+    </p>
+  </div>
+
+  <p *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</p>
+</div>

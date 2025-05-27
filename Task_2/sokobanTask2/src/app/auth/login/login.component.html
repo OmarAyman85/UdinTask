@@ -1,0 +1,28 @@
+<h2>Login</h2>
+<form (submit)="onLogin()">
+  <input
+    [(ngModel)]="email"
+    name="email"
+    placeholder="Email"
+    type="email"
+    required
+  />
+  <input
+    [(ngModel)]="password"
+    name="password"
+    placeholder="Password"
+    type="password"
+    required
+  />
+  <button type="submit">Login</button>
+</form>
+
+
+<!-- Sign Up Link -->
+<div>
+  <p>
+    Don't have an account ?
+    <a routerLink="/register">Sign up</a>
+  </p>
+</div>
+<p *ngIf="errorMsg">{{ errorMsg }}</p>

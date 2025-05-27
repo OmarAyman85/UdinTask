@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.controls {
+  margin-bottom: 1rem;
+}
+
+.grid {
+  display: inline-block;
+  font-size: 2rem;
+  line-height: 2.5rem;
+  user-select: none;
+  border: 2px solid #333;
+  padding: 0.5rem;
+  background: #f9f9f9;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 2.5rem;
+  height: 2.5rem;
+  text-align: center;
+  font-family: monospace;
+}
+
+
+h2 {
+  color: green;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}

@@ -1,0 +1,30 @@
+.dashboard-container {
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 1rem;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+}
+
+th {
+  background-color: #f4f4f4;
+  font-weight: 600;
+}
+
+.no-data {
+  text-align: center;
+  font-style: italic;
+  color: #666;
+}
