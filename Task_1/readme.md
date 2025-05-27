@@ -1,4 +1,3 @@
-````markdown
 # Sokoban Game - Angular Edition
 
 An interactive Sokoban puzzle game implemented with Angular standalone components.  
@@ -68,10 +67,8 @@ These constraints are strictly enforced in the game logic to preserve authentic 
 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/sokoban-angular.git
-cd sokoban-angular
+git clone https://github.com/OmarAyman85/UdinTask/tree/main/Task_1/sokobanTask1
 ```
-````
 
 2. Install dependencies
 
@@ -87,7 +84,6 @@ ng serve
 
 4. Open your browser at `http://localhost:4200` to play.
 
----
 
 ## How to Play
 
@@ -137,12 +133,4 @@ Key points:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-_Made with ❤️ using Angular_
-
-```
-
-```
+This project is licensed under the MIT License.
