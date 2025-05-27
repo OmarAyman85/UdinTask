@@ -1,9 +1,20 @@
-Sure! Here's the README in a code block for easy copy-paste:
-
-```markdown
 # Real-Time Multiplayer Tap Game
 
 A fast-paced, real-time multiplayer tap game built with Angular and Socket.IO. Players compete by rapidly tapping their keyboard keys, and the game tracks scores and declares a winner after a timed round.
+
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Setup and Installation](#setup-and-installation)
+- [Folder Structure](#folder-structure)
+- [How to Play](#how-to-play)
+- [Future Improvements](#future-improvements)
+- [License](#license)
+
+---
 
 ## Features
 
@@ -16,30 +27,18 @@ A fast-paced, real-time multiplayer tap game built with Angular and Socket.IO. P
 - Clean Angular frontend with reactive UI updates
 - Simple and scalable Node.js backend with Socket.IO for real-time events
 
-## Technologies Used
+---
+
+## Tech Stack
 
 - **Frontend**: Angular 15+, TypeScript, Socket.IO client
 - **Backend**: Node.js, Express, Socket.IO server
 - **Communication**: WebSockets via Socket.IO
 - **Development**: npm, Angular CLI
 
-## Project Structure
-```
+---
 
-/backend # Node.js + Socket.IO server
-├── gameManager.js # Game logic: scoring, winner detection, reset
-├── playerManager.js # Player management: add/remove players
-├── socket.js # Socket event handlers and game flow control
-└── server.js # Express server setup and Socket.IO integration
-
-/frontend # Angular client app
-├── src/app/game # GameComponent and UI logic
-├── src/app/services/socket.service.ts # Socket.IO client service
-└── ... # Other Angular app files and modules
-
-````
-
-## Getting Started
+## Setup and Installation
 
 ### Prerequisites
 
@@ -47,13 +46,21 @@ A fast-paced, real-time multiplayer tap game built with Angular and Socket.IO. P
 - npm (Node package manager)
 - Angular CLI (`npm install -g @angular/cli`)
 
+  
+- **Clone the repository**
+
+   ```bash
+   git clone https://github.com/OmarAyman85/UdinTask/tree/main/Task_3
+   ```
+
+
 ### Backend Setup
 
 1. Navigate to the backend folder:
 
    ```bash
-   cd backend
-````
+   cd server
+   ````
 
 2. Install dependencies:
 
@@ -64,17 +71,19 @@ A fast-paced, real-time multiplayer tap game built with Angular and Socket.IO. P
 3. Start the backend server:
 
    ```bash
-   node server.js
+   nodemon index.js
    ```
 
-   The server will run on `http://localhost:3000`.
+4. The server will run on `http://localhost:3000`.
+
+---
 
 ### Frontend Setup
 
 1. Navigate to the frontend folder:
 
    ```bash
-   cd frontend
+   cd spacePusher
    ```
 
 2. Install dependencies:
@@ -89,7 +98,7 @@ A fast-paced, real-time multiplayer tap game built with Angular and Socket.IO. P
    ng serve
    ```
 
-   The frontend will be available at `http://localhost:4200`.
+4. The frontend will be available at `http://localhost:4200`.
 
 ### Configuration
 
@@ -102,22 +111,51 @@ export const environment = {
 };
 ```
 
+
+## Folder Structure
+
+```
+
+server/                      # Node.js + Socket.IO server
+├── game/ 
+├      ├── gameManager.js    # Game logic: scoring, winner detection, reset
+├      ├── playerManager.js  # Player management: add/remove players
+├── socket/ 
+├      ├── index.js          # Socket event handlers and game flow control
+└── server.js                # Express server setup and Socket.IO integration
+
+/spacePusher/                            # Angular client app
+├── src
+├    ├──/app
+├    ├    ├──/game                        # GameComponent and UI logic
+├    ├    ├    ├──/game.component.ts      
+├    ├    ├    ├──/game.component.html    
+├    ├    ├    ├──/game.component.css     
+├    ├    ├──/services                    
+├    ├    ├    ├──socket.service.ts       # Socket client implementation
+├    ├    ├──/app.component.ts            
+├    ├    ├──/app.component.html          
+├    ├    ├──/app.component.css           
+├    ├    ├──/app.config.ts               
+├    ├    ├──/app.routes.ts               
+├    ├──/environments
+├    ├──index.html
+├    ├──main.ts
+├    ├──styles.css
+└── ... # Other Angular app files and modules
+```
+---
+
 ## How to Play
 
 1. Open the frontend app in your browser.
 2. Enter a username and click **Join**.
-3. Click **START GAME** to signal you're ready.
+3. Click **START GAME** to start the game.
 4. Wait for the countdown timer.
-5. Once the game starts, tap any key rapidly — each tap counts!
+5. Once the game starts, tap any key rapidly — each tap counts without holding keys!
 6. After 15 seconds, the game ends and the winner is displayed.
 
-## Code Highlights
-
-- **Backend** uses Socket.IO to manage player connections and real-time game events.
-- **Frontend** listens for server events to update UI state and sends tap events on key presses.
-- The tap logic ensures only single taps are counted, preventing key hold cheating.
-- The UI shows live countdown timers before and during the game.
-- Winner is displayed dynamically on the page, not as alerts.
+---
 
 ## Future Improvements
 
@@ -127,12 +165,8 @@ export const environment = {
 - Add sound effects and animations for enhanced experience
 - Deploy backend and frontend to cloud platforms
 
+---
+
 ## License
 
 This project is open source under the MIT License.
-
----
-
-Made with ❤️ by \[Omar Ayman]
-
----
