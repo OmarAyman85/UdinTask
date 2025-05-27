@@ -5,7 +5,7 @@ Features dynamic grid generation with walls, boxes, goals, and player movement u
 
 ---
 
-# Demo
+# Video Demo
 
 https://drive.google.com/file/d/1VvZllIsqaR9P2t46tIGz_Dgwlwzwpfgm/view?usp=drive_link
 
