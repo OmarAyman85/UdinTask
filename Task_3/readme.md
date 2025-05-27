@@ -4,6 +4,12 @@ A fast-paced, real-time multiplayer tap game built with Angular and Socket.IO. P
 
 ---
 
+# Demo
+
+https://drive.google.com/file/d/1yWDdi6nh2YHtQVckEP-zU-iWdx-983QF/view?usp=drive_link
+
+---
+
 ## Table of Contents
 
 - [Features](#features)
