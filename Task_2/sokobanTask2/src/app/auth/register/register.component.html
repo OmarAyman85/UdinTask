@@ -1,42 +1,95 @@
-<div class="container">
-  <h2>Register</h2>
+<div class="container" role="main" aria-labelledby="registerHeading">
+  <h2 id="registerHeading">Register</h2>
 
-  <form class="form-column" (submit)="onRegister()">
-    <input
-      [(ngModel)]="email"
-      name="email"
-      placeholder="Email"
-      type="email"
-      required
-    />
-    <input
-      [(ngModel)]="username"
-      name="username"
-      placeholder="username"
-      type="text"
-    />
-    <input
-      [(ngModel)]="password"
-      name="password"
-      placeholder="Password"
-      type="password"
-      required
-    />
-    <select [(ngModel)]="role" name="role">
-      <option value="player">Player</option>
-      <option value="admin">Admin</option>
-      <option value="anonymous">Anonymous</option>
-    </select>
-    <button type="submit">Register</button>
+  <form
+    class="form-column"
+    (submit)="onRegister()"
+    novalidate
+    aria-describedby="anonymousNote"
+  >
+    <!-- Email Input -->
+    <div class="form-group">
+      <label for="emailInput">Email <span aria-hidden="true">*</span></label>
+      <input
+        id="emailInput"
+        [(ngModel)]="email"
+        name="email"
+        type="email"
+        placeholder="Enter your email"
+        required
+        autocomplete="email"
+        aria-required="true"
+      />
+    </div>
+
+    <!-- Username Input -->
+    <div class="form-group">
+      <label for="usernameInput">Username</label>
+      <input
+        id="usernameInput"
+        [(ngModel)]="username"
+        name="username"
+        type="text"
+        placeholder="Enter username (leave empty if Anonymous)"
+        autocomplete="username"
+        [disabled]="role === 'anonymous'"
+      />
+      <small id="anonymousNote" class="note">
+        If you want to register as <strong>Anonymous</strong>, please leave this
+        field empty.
+      </small>
+    </div>
+
+    <!-- Password Input -->
+    <div class="form-group">
+      <label for="passwordInput"
+        >Password <span aria-hidden="true">*</span></label
+      >
+      <input
+        id="passwordInput"
+        [(ngModel)]="password"
+        name="password"
+        type="password"
+        placeholder="Enter your password"
+        required
+        autocomplete="new-password"
+        aria-required="true"
+      />
+    </div>
+
+    <!-- Role Select -->
+    <div class="form-group">
+      <label for="roleSelect">Role</label>
+      <select
+        id="roleSelect"
+        [(ngModel)]="role"
+        name="role"
+        aria-describedby="anonymousNote"
+      >
+        <option value="player">Player</option>
+        <option value="anonymous">Anonymous</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      [attr.aria-busy]="isSubmitting ? 'true' : null"
+      [disabled]="isSubmitting"
+    >
+      {{ isSubmitting ? "Registering..." : "Register" }}
+    </button>
   </form>
 
   <!-- Sign In Link -->
-  <div class="sign-in-link">
-    <p>
-      Already have an account?
-      <a routerLink="/login">Sign in</a>
-    </p>
-  </div>
+  <p class="sign-in-link">
+    Already have an account?
+    <a routerLink="/login">Sign in</a>
+  </p>
 
-  <p *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</p>
+  <!-- Error Message -->
+  <p *ngIf="errorMsg" class="error-msg" role="alert" aria-live="assertive">
+    {{ errorMsg }}
+  </p>
 </div>

@@ -5,7 +5,7 @@ import { inject } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 
 /**
- * BaseTile defines the static structure of each grid cell.
+ * BaseTile represents static grid elements:
  * - ' ' : Empty space
  * - '#' : Wall
  * - 'G' : Goal position
@@ -13,8 +13,8 @@ import { Auth } from '@angular/fire/auth';
 type BaseTile = ' ' | '#' | 'G';
 
 /**
- * EntityTile defines the dynamic entities that move or change over time.
- * - ' ' : Empty
+ * EntityTile represents dynamic entities on the grid:
+ * - ' ' : Empty space
  * - 'P' : Player
  * - 'B' : Box
  * - '*' : Box on a Goal
@@ -32,84 +32,97 @@ export class GameComponent implements OnInit {
   private auth = inject(Auth);
   private firestore = inject(Firestore);
 
-  // 2D arrays representing the game board layers
-  baseGrid: BaseTile[][] = []; // static layer (walls, goals)
-  entityGrid: EntityTile[][] = []; // dynamic layer (player, boxes)
+  // Static layer of the board (walls, goals)
+  baseGrid: BaseTile[][] = [];
 
-  size = 10; // Grid size (10x10)
-  boxCount = 3; // Number of boxes and goals
-  playerX = 0; // Player's X-coordinate
-  playerY = 0; // Player's Y-coordinate
-  winMessage: string = ''; // Message to display upon winning
+  // Dynamic layer of the board (player, boxes)
+  entityGrid: EntityTile[][] = [];
+
+  readonly size = 10; // Board dimensions (size x size)
+  readonly boxCount = 3; // Number of boxes and goals
+
+  playerX = 0; // Player's current X position
+  playerY = 0; // Player's current Y position
+  winMessage = ''; // Message shown upon winning
 
   ngOnInit(): void {
-    this.resetLevel(); // Initialize the game when component loads
+    this.resetLevel();
   }
 
   /**
-   * Resets the game by generating a new board:
-   * - Clears the grids
-   * - Creates walls (borders + random inner)
-   * - Randomly places goals, boxes, and player
+   * Initializes or resets the level by:
+   * - Clearing grids
+   * - Adding border walls and random inner walls
+   * - Placing goals, boxes, and the player in valid positions
    */
   resetLevel(): void {
     this.winMessage = '';
+    this.initializeEmptyGrid();
+    this.placeBorderWalls();
+    this.placeInnerWalls();
+    this.placeGoalsBoxesAndPlayer();
+  }
+
+  /** Helper to initialize empty grids for base and entity layers */
+  private initializeEmptyGrid(): void {
     this.baseGrid = [];
     this.entityGrid = [];
-
-    // Initialize both layers as empty
     for (let y = 0; y < this.size; y++) {
-      const baseRow: BaseTile[] = [];
-      const entityRow: EntityTile[] = [];
-
-      for (let x = 0; x < this.size; x++) {
-        baseRow.push(' ');
-        entityRow.push(' ');
-      }
-
-      this.baseGrid.push(baseRow);
-      this.entityGrid.push(entityRow);
+      this.baseGrid[y] = Array(this.size).fill(' ');
+      this.entityGrid[y] = Array(this.size).fill(' ');
     }
+  }
 
-    // Create border walls around the edges
+  /** Places walls around the border edges of the grid */
+  private placeBorderWalls(): void {
     for (let i = 0; i < this.size; i++) {
       this.baseGrid[0][i] = '#';
       this.baseGrid[this.size - 1][i] = '#';
       this.baseGrid[i][0] = '#';
       this.baseGrid[i][this.size - 1] = '#';
     }
+  }
 
-    // Add randomly placed inner walls (approx. 15% of the grid)
-    const wallCount = Math.floor(this.size * this.size * 0.15);
-    const allInnerPositions: [number, number][] = [];
+  /** Places random inner walls (~5% of grid), avoiding critical corners */
+  private placeInnerWalls(): void {
+    const wallCount = Math.floor(this.size * this.size * 0.05);
+    const innerPositions: [number, number][] = [];
 
     for (let y = 1; y < this.size - 1; y++) {
       for (let x = 1; x < this.size - 1; x++) {
-        allInnerPositions.push([x, y]);
+        innerPositions.push([x, y]);
       }
     }
 
-    const shuffle = <T>(arr: T[]) => arr.sort(() => Math.random() - 0.5);
-    const shuffled = shuffle(allInnerPositions);
+    this.shuffleArray(innerPositions);
 
     let wallsPlaced = 0;
-    while (wallsPlaced < wallCount && shuffled.length) {
-      const [x, y] = shuffled.pop()!;
-      // Avoid placing walls in critical corners
-      if (
+    while (wallsPlaced < wallCount && innerPositions.length > 0) {
+      const [x, y] = innerPositions.pop()!;
+
+      // Avoid placing walls in corners that might block gameplay
+      const isCriticalCorner =
         (x === 1 && y === 1) ||
         (x === this.size - 2 && y === 1) ||
         (x === 1 && y === this.size - 2) ||
-        (x === this.size - 2 && y === this.size - 2)
-      )
-        continue;
+        (x === this.size - 2 && y === this.size - 2);
+
+      if (isCriticalCorner) continue;
 
       this.baseGrid[y][x] = '#';
       wallsPlaced++;
     }
+  }
 
-    // Identify safe positions for placing goals, boxes, and player
+  /**
+   * Identifies valid empty positions to place goals, boxes, and the player,
+   * ensuring they have enough empty space around for movement.
+   * Then randomly places these entities on the grid.
+   */
+  private placeGoalsBoxesAndPlayer(): void {
     const candidates: [number, number][] = [];
+
+    // Find empty tiles surrounded by empty spaces suitable for gameplay
     for (let y = 2; y < this.size - 2; y++) {
       for (let x = 2; x < this.size - 2; x++) {
         if (this.baseGrid[y][x] !== ' ') continue;
@@ -122,37 +135,46 @@ export class GameComponent implements OnInit {
         const canMoveVert = up === ' ' && down === ' ';
         const canMoveHorz = left === ' ' && right === ' ';
 
-        // Only include positions that can allow horizontal or vertical pushes
         if (canMoveVert || canMoveHorz) {
           candidates.push([x, y]);
         }
       }
     }
 
-    const shuffledCandidates = shuffle([...candidates]);
+    this.shuffleArray(candidates);
 
-    // Randomly place goals on baseGrid
+    // Place goals on the base layer
     for (let i = 0; i < this.boxCount; i++) {
-      const [gx, gy] = shuffledCandidates.pop()!;
+      const [gx, gy] = candidates.pop()!;
       this.baseGrid[gy][gx] = 'G';
     }
 
-    // Randomly place boxes on entityGrid
+    // Place boxes on the entity layer
     for (let i = 0; i < this.boxCount; i++) {
-      const [bx, by] = shuffledCandidates.pop()!;
+      const [bx, by] = candidates.pop()!;
       this.entityGrid[by][bx] = 'B';
     }
 
-    // Randomly place the player
-    const [px, py] = shuffledCandidates.pop()!;
+    // Place the player on the entity layer
+    const [px, py] = candidates.pop()!;
     this.entityGrid[py][px] = 'P';
     this.playerX = px;
     this.playerY = py;
   }
 
   /**
-   * Handles keyboard input for moving the player and pushing boxes.
-   * Arrow keys are used to control movement.
+   * Shuffles an array in-place using Fisher-Yates algorithm.
+   */
+  private shuffleArray<T>(array: T[]): void {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  /**
+   * Handles keyboard arrow key events to move the player and push boxes.
+   * Movement blocked by walls or grid boundaries.
    */
   @HostListener('window:keydown', ['$event'])
   handleKey(event: KeyboardEvent): void {
@@ -167,37 +189,39 @@ export class GameComponent implements OnInit {
     if (!dir) return;
 
     const [dx, dy] = dir;
-    const x1 = this.playerX + dx;
-    const y1 = this.playerY + dy;
+    const targetX = this.playerX + dx;
+    const targetY = this.playerY + dy;
 
-    const entity1 = this.entityGrid[y1]?.[x1];
-    const base1 = this.baseGrid[y1]?.[x1];
+    const entityAtTarget = this.entityGrid[targetY]?.[targetX];
+    const baseAtTarget = this.baseGrid[targetY]?.[targetX];
 
-    // Block movement if outside bounds or hitting a wall
-    if (!entity1 || base1 === '#') return;
+    // Prevent movement outside bounds or into walls
+    if (!entityAtTarget || baseAtTarget === '#') return;
 
-    // Handle box push
-    if (entity1 === 'B' || entity1 === '*') {
-      const x2 = x1 + dx;
-      const y2 = y1 + dy;
-      const entity2 = this.entityGrid[y2]?.[x2];
-      const base2 = this.baseGrid[y2]?.[x2];
+    // Handle pushing a box if present
+    if (entityAtTarget === 'B' || entityAtTarget === '*') {
+      const boxTargetX = targetX + dx;
+      const boxTargetY = targetY + dy;
+      const entityBeyondBox = this.entityGrid[boxTargetY]?.[boxTargetX];
+      const baseBeyondBox = this.baseGrid[boxTargetY]?.[boxTargetX];
 
-      // Check that box can be pushed into an empty or goal tile
-      if (!entity2 || base2 === '#' || entity2 !== ' ') return;
+      // Block push if next tile is wall, occupied, or out of bounds
+      if (!entityBeyondBox || baseBeyondBox === '#' || entityBeyondBox !== ' ')
+        return;
 
-      // Push box forward
-      this.entityGrid[y2][x2] = this.baseGrid[y2][x2] === 'G' ? '*' : 'B';
-      this.entityGrid[y1][x1] = ' ';
+      // Move the box forward and update its state (on goal or normal)
+      this.entityGrid[boxTargetY][boxTargetX] =
+        baseBeyondBox === 'G' ? '*' : 'B';
+      this.entityGrid[targetY][targetX] = ' ';
     }
 
-    // Move player into target tile
+    // Move player to the target tile
     this.entityGrid[this.playerY][this.playerX] = ' ';
-    this.entityGrid[y1][x1] = 'P';
-    this.playerX = x1;
-    this.playerY = y1;
+    this.entityGrid[targetY][targetX] = 'P';
+    this.playerX = targetX;
+    this.playerY = targetY;
 
-    // Check win condition after each move
+    // Check if the player has won after this move
     if (this.checkWin()) {
       this.winMessage = '🎉 You Win!';
       this.incrementUserScore();
@@ -205,33 +229,45 @@ export class GameComponent implements OnInit {
   }
 
   /**
-   * Returns the emoji representation of the tile at a given coordinate.
-   * Combines both base and entity layers.
+   * Returns the emoji representation for the tile at (x, y),
+   * combining base and entity layers.
    */
   getTileDisplay(x: number, y: number): string {
     const base = this.baseGrid[y][x];
     const entity = this.entityGrid[y][x];
 
-    if (entity === 'P') return '🧍‍♂️';
-    if (entity === 'B') return '📦';
-    if (entity === '*') return '✅';
-    if (base === 'G') return '🎯';
-    if (base === '#') return '🧱';
-    return '⬜';
+    switch (entity) {
+      case 'P':
+        return '🧍‍♂️';
+      case 'B':
+        return '📦';
+      case '*':
+        return '✅';
+    }
+
+    switch (base) {
+      case 'G':
+        return '🎯';
+      case '#':
+        return '🧱';
+      default:
+        return '⬜';
+    }
   }
 
   /**
-   * Win condition is met when all goals are occupied by boxes ('*').
+   * Checks if all goals ('G') are covered by boxes on goals ('*').
+   * Returns true if player has won.
    */
   checkWin(): boolean {
     for (let y = 0; y < this.size; y++) {
       for (let x = 0; x < this.size; x++) {
         if (this.baseGrid[y][x] === 'G' && this.entityGrid[y][x] !== '*') {
-          return false; // at least one goal not covered
+          return false;
         }
       }
     }
-    return true; // all goals have boxes
+    return true;
   }
 
   async incrementUserScore() {
@@ -240,9 +276,7 @@ export class GameComponent implements OnInit {
       console.warn('No authenticated user found.');
       return;
     }
-
     const userDocRef = doc(this.firestore, `users/${user.uid}`);
-
     try {
       await updateDoc(userDocRef, {
         score: increment(1),

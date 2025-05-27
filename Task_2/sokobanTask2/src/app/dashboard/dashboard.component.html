@@ -1,9 +1,21 @@
 <div class="dashboard-container">
-  <h2>Welcome back, {{ currentUserName }}!</h2>
+  <header>
+    <h2>
+      Welcome back, <span class="username">{{ currentUserName }}</span
+      >!
+    </h2>
+  </header>
 
-  <section aria-label="Top 10 Leaderboard">
+  <section aria-label="Top 10 Leaderboard" class="leaderboard-section">
     <h3>Top 10 Leaderboard</h3>
-    <table>
+    <table
+      class="leaderboard-table"
+      role="table"
+      aria-describedby="leaderboard-desc"
+    >
+      <caption id="leaderboard-desc" class="visually-hidden">
+        Displays top 10 users by score
+      </caption>
       <thead>
         <tr>
           <th scope="col">Username</th>
@@ -15,7 +27,6 @@
           <td>{{ user.username }}</td>
           <td>{{ user.score }}</td>
         </tr>
-        <!-- Show a message if no users found -->
         <tr *ngIf="topUsers.length === 0">
           <td colspan="2" class="no-data">No leaderboard data available.</td>
         </tr>
@@ -23,8 +34,12 @@
     </table>
   </section>
 
-  <!-- Sign In Link -->
-  <div>
-    <a routerLink="/game">LET'S PLAY</a>
-  </div>
+  <nav aria-label="Main navigation" class="dashboard-actions">
+    <a routerLink="/game" class="btn btn-primary" role="button" tabindex="0"
+      >LET'S PLAY</a
+    >
+    <button type="button" (click)="onLogout()" class="btn btn-logout">
+      LOGOUT
+    </button>
+  </nav>
 </div>

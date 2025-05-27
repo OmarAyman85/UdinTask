@@ -77,9 +77,9 @@ export class SokobanComponent implements OnInit {
     }
   }
 
-  /** Places random inner walls (~15% of grid), avoiding critical corners */
+  /** Places random inner walls (~5% of grid), avoiding critical corners */
   private placeInnerWalls(): void {
-    const wallCount = Math.floor(this.size * this.size * 0.15);
+    const wallCount = Math.floor(this.size * this.size * 0.05);
     const innerPositions: [number, number][] = [];
 
     for (let y = 1; y < this.size - 1; y++) {

@@ -1,15 +1,36 @@
-<div class="container">
-  <div class="controls">
-    <button (click)="resetLevel()">🔄 Reset Puzzle</button>
-  </div>
+<main class="container" role="main" aria-label="Sokoban game interface">
+  <section
+    *ngIf="winMessage"
+    aria-live="assertive"
+    aria-atomic="true"
+    class="win-message"
+  >
+    <h2>{{ winMessage }}</h2>
+  </section>
 
-  <h2 *ngIf="winMessage">{{ winMessage }}</h2>
-
-  <div class="grid">
-    <div *ngFor="let row of baseGrid; let y = index" class="row">
-      <span *ngFor="let col of row; let x = index" class="cell">
+  <section class="grid" role="grid" aria-label="Game grid" tabindex="0">
+    <div *ngFor="let row of baseGrid; let y = index" role="row" class="row">
+      <div
+        *ngFor="let col of row; let x = index"
+        role="gridcell"
+        [attr.aria-rowindex]="y + 1"
+        [attr.aria-colindex]="x + 1"
+        class="cell"
+      >
         {{ getTileDisplay(x, y) }}
-      </span>
+      </div>
     </div>
-  </div>
-</div>
+  </section>
+
+  <section class="controls" aria-label="Game controls">
+    <button
+      type="button"
+      (click)="resetLevel()"
+      aria-live="polite"
+      aria-atomic="true"
+      class="btn-reset"
+    >
+      🔄 Reset Puzzle
+    </button>
+  </section>
+</main>

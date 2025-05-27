@@ -1,28 +1,49 @@
-<h2>Login</h2>
-<form (submit)="onLogin()">
-  <input
-    [(ngModel)]="email"
-    name="email"
-    placeholder="Email"
-    type="email"
-    required
-  />
-  <input
-    [(ngModel)]="password"
-    name="password"
-    placeholder="Password"
-    type="password"
-    required
-  />
-  <button type="submit">Login</button>
-</form>
+<section class="auth-container" aria-labelledby="login-heading">
+  <h2 id="login-heading" class="auth-title">Login to Your Account</h2>
 
+  <form (submit)="onLogin()" class="auth-form" novalidate>
+    <div class="form-group">
+      <label for="email" class="form-label">Email Address</label>
+      <input
+        id="email"
+        [(ngModel)]="email"
+        name="email"
+        type="email"
+        required
+        autocomplete="email"
+        class="form-input"
+        placeholder="Enter your email"
+        aria-required="true"
+      />
+    </div>
 
-<!-- Sign Up Link -->
-<div>
-  <p>
-    Don't have an account ?
-    <a routerLink="/register">Sign up</a>
-  </p>
-</div>
-<p *ngIf="errorMsg">{{ errorMsg }}</p>
+    <div class="form-group">
+      <label for="password" class="form-label">Password</label>
+      <input
+        id="password"
+        [(ngModel)]="password"
+        name="password"
+        type="password"
+        required
+        autocomplete="current-password"
+        class="form-input"
+        placeholder="Enter your password"
+        aria-required="true"
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary" aria-label="Login">
+      Login
+    </button>
+
+    <!-- Error message -->
+    <p *ngIf="errorMsg" class="error-msg" role="alert">{{ errorMsg }}</p>
+  </form>
+
+  <footer class="auth-footer">
+    <p>
+      Don't have an account?
+      <a routerLink="/register" class="link-primary">Sign up</a>
+    </p>
+  </footer>
+</section>
