@@ -1,157 +1,42 @@
-```markdown
-# Complete ChatGPT Prompt Log for Real-Time Multiplayer Tap Game Project
+# prompt.md
 
-## Initial Project Setup & Feature Requests
-
-### 1. Create Node.js player manager with add/remove/get players functionality
-```
-
-const players = new Map();
-
-function addPlayer(id, username) {
-players.set(id, { username, score: 0 });
-}
-
-function removePlayer(id) {
-players.delete(id);
-}
-
-function getPlayers() {
-return players;
-}
-
-module.exports = { addPlayer, removePlayer, getPlayers };
-
-```
+This document captures some of the prompts exchanged during the development of the multi-player tap game. However it failed to assist in seperating the player's ready state and starting the game. Instead it mixed them to start the game whenever one player is ready.
 
 ---
 
-### 2. Create game manager for tap handling, winner calculation, and game reset
-```
-
-let players = require("./playerManager").getPlayers();
-
-function handleTap(id) {
-if (players.has(id)) {
-players.get(id).score++;
-}
-}
-
-function getWinner() {
-// find player with highest score
-}
-
-function resetGame() {
-// reset all player scores
-}
-
-module.exports = { handleTap, getWinner, resetGame };
-
-```
+### Prompt 1:
+"Using Angular, create a multi-player game where multiple players press a button on the keyboard and the player with the most taps in 15 seconds sprint win while ensuring an accurate start time for users in different geographic locations."
 
 ---
 
-### 3. Setup Socket.IO server handlers: player join, ready, tap, disconnect, game start/end flow
-```
-
-function setupSocketHandlers(io) {
-io.on("connection", (socket) => {
-socket.on("join-game", username => { ... });
-socket.on("ready", () => { ... });
-socket.on("tap", () => { ... });
-socket.on("disconnect", () => { ... });
-});
-}
-
-```
+### Prompt 2:
+"Design me a professional and advanced folder structure for this project."
 
 ---
 
-### 4. Setup backend server with Express, HTTP, CORS, Socket.IO
-```
-
-const express = require("express");
-const http = require("http");
-const cors = require("cors");
-const { Server } = require("socket.io");
-
-const app = express();
-app.use(cors());
-
-const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "[http://localhost:4200](http://localhost:4200)" } });
-
-setupSocketHandlers(io);
-
-server.listen(3000);
-
-```
+### Prompt 3:
+"Break down the signle index.js to the new folder structure provided to divide responsibilities and follow clean coding best practices."
 
 ---
 
-## Angular Frontend Development
-
-### 5. Create GameComponent with username input, join, ready, tap counting, game start/end event handling
-- Listen for `game-start` and `game-end` events from socket
-- Track taps during gameplay
-- Show winner in alert (initially)
+### Prompt 4:
+"The users are not joining on the same socket server instead when a new client join it creates a new socket."
 
 ---
 
-### 6. Update to show winner in the page instead of alert popup
+### Prompt 5:
+"Start this project both on frontend and backend from scratch based on the previous updates and errors arised."
 
 ---
 
-### 7. Add 3-second countdown display on screen before game start (from backend startTime delay)
+### Prompt 6:
+"Refactor and enhance the code and also add explanatory comments where needed."
 
 ---
 
-### 8. Prevent continuous keypress counting (require keyup before next tap)
+### Prompt 7:
+"Style the game components."
 
 ---
 
-### 9. Add 15-second gameplay countdown timer display
-
----
-
-### 10. Refactor GameComponent code with explanatory comments and semantic, professional structure
-
----
-
-### 11. Style and refactor game HTML template
-- Semantic markup
-- Center container on page
-- Show username input/join button, start game button, countdown, taps, timer, and winner messages
-
----
-
-### 12. Document Angular SocketService
-- Explain socket connection
-- Describe emitted events: join-game, ready, tap
-- Describe received events and callback registration
-
----
-
-## Final Project Documentation
-
-### 13. Write detailed README.md
-- Project description
-- Features
-- Installation instructions
-- Usage instructions
-- Architecture overview
-- Future improvements
-
----
-
-### 14. Generate prompt.md with full conversation prompts for reference and versioning
-
----
-
-# Summary
-
-This prompt log contains all initial feature requests, backend and frontend implementation steps, enhancements, bug fixes, styling and documentation requests you made during the development of the Real-Time Multiplayer Tap Game project.
-
----
-
-```
+# End of prompt.md
